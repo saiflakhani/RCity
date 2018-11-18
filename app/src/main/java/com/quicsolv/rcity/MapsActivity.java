@@ -1,10 +1,27 @@
 package com.quicsolv.rcity;
 
+import android.Manifest;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.JsonReader;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,6 +31,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.nearby.messages.MessagesClient;
+import com.google.android.gms.nearby.messages.MessagesOptions;
+import com.google.android.gms.nearby.messages.NearbyPermissions;
+import com.google.android.gms.nearby.messages.Strategy;
+import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quicsolv.rcity.mapping.GetPOIMappingInterface;
@@ -32,9 +57,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.quicsolv.rcity.RetrofitClient.BASE_URL;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
+
+    private static final int REQUEST_RESOLVE_ERROR = 100;
+    private static final int REQUEST_PERMISSION = 42;
+    private GoogleApiClient mGoogleApiClient;
+    private TextView tVDebug;
+    private static final String TAG =
+            MapsActivity.class.getSimpleName();
+    MessagesClient mMessagesClient;
+    MessageListener mMessageListener;
+    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +81,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
+        tVDebug = findViewById(R.id.tVDebug);
+
+        checkAndAskPermissions();
+
+        mMessageListener = new MessageListener(){
+            @Override
+            public void onFound(Message message){
+                tVDebug.append(new String(message.getContent()));
+            }
+            @Override
+            public void onLost(Message message){
+
+            }
+        };
+        
+
+    }
 
 
+
+    private void checkAndAskPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
+                    .setPermissions(NearbyPermissions.BLE)
+                    .build());
+        }else{
+            ActivityCompat.requestPermissions(MapsActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSION);
+        }
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 1);
+        }
     }
 
     private void doRetroFit() {
         GetPOIInterface poiInterface = RetrofitClient.getClient().create(GetPOIInterface.class);
-
-
 
         poiInterface.postNearby(new PostBody("username","pass","building_a4adff86-0a9c-44f4-ad0c-f709a4f91451_1542360867089")).enqueue(new Callback<POIResponse>() {
             @Override
@@ -63,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 for(Poi curPoi:poiList){
                     MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription());
-                    if(!curPoi.getName().equals("Connector"))mMap.addMarker(opt);
+                    if(!curPoi.getName().equals("Connector"))mMap.addMarker(opt); //DON'T ADD TO MAP IF IT IS A CONNECTOR
                 }
             }
 
@@ -100,16 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -118,7 +175,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng rCity = new LatLng(19.098805,72.915914);
         //mMap.addMarker(new MarkerOptions().position(rCity).title("Marker in RCity"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(rCity));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(20));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
         doRetroFit();
     }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        subscribe();
+    }
+
+    @Override
+    public void onStop() {
+        //Nearby.getMessagesClient(this).unsubscribe(mMessageListener);
+        super.onStop();
+    }
+    // Subscribe to receive messages.
+    private void subscribe() {
+        Log.i(TAG, "Subscribing.");
+        SubscribeOptions options = new SubscribeOptions.Builder()
+                .setStrategy(Strategy.BLE_ONLY)
+                .build();
+        Nearby.getMessagesClient(this).subscribe(mMessageListener, options);
+        backgroundSubscribe();
+    }
+
+
+    private void backgroundSubscribe() {
+        Log.i(TAG, "Subscribing for background updates.");
+        SubscribeOptions options = new SubscribeOptions.Builder()
+                .setStrategy(Strategy.BLE_ONLY)
+                .build();
+        Nearby.getMessagesClient(this).subscribe(getPendingIntent(), options);
+    }
+
+    private PendingIntent getPendingIntent() {
+        return PendingIntent.getBroadcast(this, 0, new Intent(this, BeaconService.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
+                            .setPermissions(NearbyPermissions.BLE)
+                            .build());
+                } else {
+                    Toast.makeText(MapsActivity.this,"Need this permission",Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
 }
