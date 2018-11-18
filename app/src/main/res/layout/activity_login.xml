@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ForgotPasswordActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:layout_marginTop="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iVLogo"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_centerHorizontal="true"/>
+
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:id="@+id/eTEmail"
+            android:layout_below="@id/iVLogo"
+            android:layout_marginTop="60dp"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/rounded_edittext"
+            android:padding="15dp"
+            android:drawableStart="@drawable/person"
+            android:drawablePadding="10dp"/>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:id="@+id/eTPassword"
+            android:layout_below="@id/eTEmail"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:padding="15dp"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="10dp"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cBRememberMe"
+            android:text="Remember Me"
+            android:buttonTint="@color/lightBlue"
+            android:layout_below="@id/eTPassword"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/lightBlue"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:layout_below="@id/cBRememberMe"
+            android:textColor="@android:color/white"
+            android:text="Login"
+            android:id="@+id/btnLogin"
+            android:layout_marginTop="20dp"/>
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,4 +1,7 @@
-package com.quicsolv.rcity;
+package com.quicsolv.rcity.Interfaces;
+
+import com.quicsolv.rcity.POIResponse;
+import com.quicsolv.rcity.PostBody;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

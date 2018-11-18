@@ -4,32 +4,23 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
@@ -39,8 +30,7 @@ import com.google.android.gms.nearby.messages.MessagesOptions;
 import com.google.android.gms.nearby.messages.NearbyPermissions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.quicsolv.rcity.Interfaces.GetPOIInterface;
 import com.quicsolv.rcity.mapping.GetPOIMappingInterface;
 import com.quicsolv.rcity.mapping.MappingPostBody;
 import com.quicsolv.rcity.mapping.POIMapping;
@@ -52,12 +42,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.quicsolv.rcity.RetrofitClient.BASE_URL;
-
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnIndoorStateChangeListener {
 
     private GoogleMap mMap;
 
@@ -70,6 +56,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     MessagesClient mMessagesClient;
     MessageListener mMessageListener;
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    UserProfile userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +67,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         tVDebug = findViewById(R.id.tVDebug);
 
         checkAndAskPermissions();
+        userProfile = (UserProfile) getIntent().getSerializableExtra("UserProfile");
 
         mMessageListener = new MessageListener(){
             @Override
@@ -98,8 +85,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         
 
     }
-
-
 
     private void checkAndAskPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -120,7 +105,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void doRetroFit() {
-        GetPOIInterface poiInterface = RetrofitClient.getClient().create(GetPOIInterface.class);
+
+        Toast.makeText(this, userProfile.getFullName() + "\n" + userProfile.getEmailId(), Toast.LENGTH_SHORT).show();
+
+        GetPOIInterface poiInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIInterface.class);
 
         poiInterface.postNearby(new PostBody("username","pass","building_a4adff86-0a9c-44f4-ad0c-f709a4f91451_1542360867089")).enqueue(new Callback<POIResponse>() {
             @Override
@@ -142,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-        GetPOIMappingInterface mappingInterface = RetrofitClient.getClient().create(GetPOIMappingInterface.class);
+        GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
 
         mappingInterface.postNearby(new MappingPostBody("username","pass","poi_2ea3e34f-9912-41df-8484-973004aa598f","poi_d8730ee4-3cbc-4e21-b654-d7b14e880e62")).enqueue(new Callback<POIMapping>() {
             @Override
@@ -170,15 +158,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //mMap.setIndoorEnabled(true);
 
         // Add a marker in Sydney and move the camera
-        LatLng rCity = new LatLng(19.098805,72.915914);
+        LatLng rCity = new LatLng(19.1001368,72.916189);
         //mMap.addMarker(new MarkerOptions().position(rCity).title("Marker in RCity"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(rCity));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
         doRetroFit();
     }
-
 
     @Override
     public void onStart() {
@@ -236,5 +224,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // permissions this app might request.
         }
     }
+    @Override
+    public void onIndoorBuildingFocused() {
 
+    }
+
+    @Override
+    public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
+
+    }
 }

@@ -18,12 +18,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    static String BASE_URL = "https://ap.cs.ucy.ac.cy/";
 
     private static Retrofit retrofit = null;
 
 
-    public static Retrofit getClient() {
+    public static Retrofit getClient(String BASE_URL) {
 
         if (retrofit == null) {
             Gson gson = new GsonBuilder()
