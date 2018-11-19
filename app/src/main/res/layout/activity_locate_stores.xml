@@ -17,32 +17,23 @@
 
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="25dp"
         android:padding="20dp"
         android:id="@+id/iBtnFloorUp"
-        android:background="@android:drawable/arrow_up_float"/>
+        android:background="@drawable/deal_logo"/>
+
+
 
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:padding="20dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/iBtnFloorDown"
-        android:layout_below="@id/iBtnFloorUp"
-        android:background="@android:drawable/arrow_down_float"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/ic_launcher"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/map_location"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:id="@+id/iBtnLocateMe"
@@ -68,8 +59,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:background="@android:color/white"
+                android:background="@drawable/rounded_edittext"
                 android:layout_centerHorizontal="true"
+                android:hint="e.g Reliance Jewels"
                 android:ems="10" />
 
         </RelativeLayout>
@@ -97,38 +89,11 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="5dp"
-            android:background="#FFFFFF"
+            android:background="@drawable/rounded_edittext"
             android:id="@+id/btnSearch"
             android:textColor="@android:color/holo_purple"
             android:text="Search"/>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/lLSearch"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tVDebug"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_height="wrap_content"
-            android:text="Floor: "
-            android:id="@+id/tVFloor"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:id="@+id/tVAP"
-            android:text="AP"/>
 
     </LinearLayout>
 
@@ -139,5 +104,15 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/tVCancelNav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignBottom="@+id/iBtnLocateMe"
+        android:layout_alignEnd="@+id/iBtnFloorUp"
+        android:text="Cancel Navigation"
+        android:textColor="@android:color/holo_red_dark" />
 
 </RelativeLayout>

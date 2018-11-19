@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView tVDebug;
     private AutoCompleteTextView actvSearch;
     private Button btnSearch;
+    private ImageButton btnLocateMe;
     private ArrayAdapter<String> mSearchAdapter;
     private ArrayList<String> mAllPlacesList = new ArrayList<>();
     private static final String TAG =
@@ -91,6 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     List<Poi> poiList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     UserProfile userProfile;
+    private static Poi destPOI = null;
 
     LatLng latLng = null;
 
@@ -99,6 +102,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_CODE = 1111;
 
     private static final String KEY_SUBSCRIBED = "subscribed";
+
+    private static boolean isNavOn = false;
+
+    private static String lastLocation = "-1";
 
 
     /**
@@ -130,6 +137,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mSearchAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,mAllPlacesList);
         actvSearch.setAdapter(mSearchAdapter);
 
+        //TODO REMOVE THIS
+        dealsButton();
+
 
         mMessageListener = new MessageListener() {
             @Override
@@ -137,19 +147,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 final Message msg1 = message;
                 Log.d(TAG, "Found message: " + new String(message.getContent()));
                 tVDebug.setText("You are near "+new String(msg1.getContent()));
-                if(mAllPlacesList.contains(new String(msg1.getContent()))){
-                    //int place = mAllPlacesList.indexOf(new String(msg1.getContent()));
-                    for(Poi poi : poiList){
-                        if(poi.getName().equalsIgnoreCase(new String(msg1.getContent()))){
-                            curPoiId = poi.getPuid();
-                            curPoi = poi;
-                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
-                            mMap.clear();
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()))).icon(icon));
-                        }
-                    }
-                }
-
+                lastLocation = new String(msg1.getContent());
+                handleUserLocation(new String(msg1.getContent()));
             }
 
             @Override
@@ -163,9 +162,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkAndAskPermissions();
         userProfile = (UserProfile) getIntent().getSerializableExtra("UserProfile");
 
+        btnLocateMe = findViewById(R.id.iBtnLocateMe);
+        btnLocateMe.setOnClickListener(locateListener);
 
-        
+    }
 
+    private void handleUserLocation(String msg1){
+        if(mAllPlacesList.contains(msg1)){
+            //int place = mAllPlacesList.indexOf(new String(msg1.getContent()));
+            for(Poi poi : poiList){
+                if(poi.getName().equalsIgnoreCase(msg1)){
+                    curPoiId = poi.getPuid();
+                    curPoi = poi;
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                    mMap.clear();
+                    LatLng currentLocation = new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()));
+                    mMap.addMarker(new MarkerOptions().position(currentLocation).icon(icon));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 19));
+                    if(isNavOn){
+                        plotRoute(curPoi.getPuid(),destPOI.getPuid());
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(destPOI.getCoordinatesLat()),Double.parseDouble(destPOI.getCoordinatesLon()))));
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void dealsButton() {
+        ImageButton ibTn = findViewById(R.id.iBtnFloorUp);
+        ibTn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MapsActivity.this,DealsActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private View.OnClickListener searchClickListener = new View.OnClickListener() {
@@ -184,6 +217,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 plotRoute(curPoiId, poi.getPuid());
                                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
                                 mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
+                                isNavOn = true;
+                                destPOI = poi;
+                                final TextView tVCancel = findViewById(R.id.tVCancelNav);
+                                tVCancel.setVisibility(View.VISIBLE);
+                                tVCancel.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        isNavOn = false;
+                                        mMap.clear();
+                                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                                        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
+                                        tVCancel.setVisibility(View.GONE);
+                                    }
+                                });
                             }
                             mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()))));
 
@@ -255,9 +302,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d("Response",response.message()+response.code()+response.toString());
                 poiList.clear();
                 poiList = response.body().getPois();
-                //BitmapDescriptor defaultIcon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                BitmapDescriptor defaultIcon = BitmapDescriptorFactory.fromResource(R.drawable.circle_default);
                 for(Poi curPoi:poiList){
-                    MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription());
+                    MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription()).icon(defaultIcon);
                     if(!curPoi.getName().equals("Connector")) {
                         mMap.addMarker(opt); //DON'T ADD TO MAP IF IT IS A CONNECTOR
                     }
@@ -423,6 +470,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
     }
+
+    private View.OnClickListener locateListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(!lastLocation.equals("-1")){
+                handleUserLocation(lastLocation);
+            }else{
+                Toast.makeText(MapsActivity.this,"Couldn't locate you",Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
 
 }
