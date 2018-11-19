@@ -255,9 +255,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d("Response",response.message()+response.code()+response.toString());
                 poiList.clear();
                 poiList = response.body().getPois();
-                BitmapDescriptor defaultIcon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                //BitmapDescriptor defaultIcon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
                 for(Poi curPoi:poiList){
-                    MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription()).icon(defaultIcon);
+                    MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription());
                     if(!curPoi.getName().equals("Connector")) {
                         mMap.addMarker(opt); //DON'T ADD TO MAP IF IT IS A CONNECTOR
                     }
