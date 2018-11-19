@@ -3,25 +3,47 @@ package com.quicsolv.rcity;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.IndoorBuilding;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -31,6 +53,10 @@ import com.google.android.gms.nearby.messages.NearbyPermissions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.quicsolv.rcity.Interfaces.GetPOIInterface;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.quicsolv.rcity.mapping.GetPOIMappingInterface;
 import com.quicsolv.rcity.mapping.MappingPostBody;
 import com.quicsolv.rcity.mapping.POIMapping;
@@ -43,7 +69,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnIndoorStateChangeListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnIndoorStateChangeListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private GoogleMap mMap;
 
@@ -51,12 +78,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int REQUEST_PERMISSION = 42;
     private GoogleApiClient mGoogleApiClient;
     private TextView tVDebug;
+    private AutoCompleteTextView actvSearch;
+    private Button btnSearch;
+    private ArrayAdapter<String> mSearchAdapter;
+    private ArrayList<String> mAllPlacesList = new ArrayList<>();
     private static final String TAG =
             MapsActivity.class.getSimpleName();
+
     MessagesClient mMessagesClient;
-    MessageListener mMessageListener;
+    private static String curPoiId = "-1";
+    private static Poi curPoi= null;
+    List<Poi> poiList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     UserProfile userProfile;
+
+    LatLng latLng = null;
+
+    //private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final int PERMISSIONS_REQUEST_CODE = 1111;
+
+    private static final String KEY_SUBSCRIBED = "subscribed";
+
+
+    /**
+     * The container {@link android.view.ViewGroup} for the minimal UI associated with this sample.
+     */
+    private RelativeLayout mContainer;
+
+
+    private boolean mSubscribed = false;
+
+
+    private MessageListener mMessageListener;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,31 +124,96 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        tVDebug = findViewById(R.id.tVDebug);
+        tVDebug = findViewById(R.id.tVDebugView);
+        actvSearch = findViewById(R.id.actSearch);
 
+        mSearchAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,mAllPlacesList);
+        actvSearch.setAdapter(mSearchAdapter);
+
+
+        mMessageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message) {
+                final Message msg1 = message;
+                Log.d(TAG, "Found message: " + new String(message.getContent()));
+                tVDebug.setText("You are near "+new String(msg1.getContent()));
+                if(mAllPlacesList.contains(new String(msg1.getContent()))){
+                    //int place = mAllPlacesList.indexOf(new String(msg1.getContent()));
+                    for(Poi poi : poiList){
+                        if(poi.getName().equalsIgnoreCase(new String(msg1.getContent()))){
+                            curPoiId = poi.getPuid();
+                            curPoi = poi;
+                            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                            mMap.clear();
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()))).icon(icon));
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onLost(Message message) {
+                Log.d(TAG, "Lost sight of message: " + new String(message.getContent()));
+            }
+        };
+
+        btnSearch = findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(searchClickListener);
         checkAndAskPermissions();
         userProfile = (UserProfile) getIntent().getSerializableExtra("UserProfile");
 
-        mMessageListener = new MessageListener(){
-            @Override
-            public void onFound(Message message){
-                tVDebug.append(new String(message.getContent()));
-            }
-            @Override
-            public void onLost(Message message){
 
-            }
-        };
         
 
     }
 
+    private View.OnClickListener searchClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String searchShop = actvSearch.getText().toString();
+            if(!searchShop.isEmpty()){
+                if(mAllPlacesList.contains(searchShop)){
+                    for(Poi poi : poiList){
+                        if(poi.getName().equalsIgnoreCase(searchShop)){
+                            if(curPoiId.equals("-1")) {
+                                plotRoute("poi_2ea3e34f-9912-41df-8484-973004aa598f", poi.getPuid());
+                                Log.d(TAG, "POI ID " + poi.getPuid());
+                            }
+                            else {
+                                plotRoute(curPoiId, poi.getPuid());
+                                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
+                            }
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()))));
+
+                        }
+                    }
+                }else{
+                    Toast.makeText(MapsActivity.this,"Could not find the requested place",Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(MapsActivity.this,"Please select a place",Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+
+
+
+
+
     private void checkAndAskPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
-                    .setPermissions(NearbyPermissions.BLE)
-                    .build());
+
+                mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
+                        .setPermissions(NearbyPermissions.BLE)
+                        .build());
+                foregroundSubscribe();
+                backgroundSubscribe();
+
+
         }else{
             ActivityCompat.requestPermissions(MapsActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -104,22 +226,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void doRetroFit() {
+    private void foregroundSubscribe() {
+        Log.i(TAG, "Subscribing.");
+        SubscribeOptions options = new SubscribeOptions.Builder()
+                .setStrategy(Strategy.BLE_ONLY)
+                .build();
+        Nearby.getMessagesClient(this).subscribe(mMessageListener, options);
+    }
 
-        Toast.makeText(this, userProfile.getFullName() + "\n" + userProfile.getEmailId(), Toast.LENGTH_SHORT).show();
+    private boolean havePermissions() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void doRetroFit() {
+        try {
+            Toast.makeText(this, userProfile.getFullName() + "\n" + userProfile.getEmailId(), Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            Log.d(TAG,"Coming  from nearby");
+        }
 
         GetPOIInterface poiInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIInterface.class);
 
         poiInterface.postNearby(new PostBody("username","pass","building_a4adff86-0a9c-44f4-ad0c-f709a4f91451_1542360867089")).enqueue(new Callback<POIResponse>() {
             @Override
             public void onResponse(Call<POIResponse> call, Response<POIResponse> response) {
+                mAllPlacesList.clear();
                 Log.d("Response",response.message()+response.code()+response.toString());
-                List<Poi> poiList = response.body().getPois();
-
+                poiList.clear();
+                poiList = response.body().getPois();
+                BitmapDescriptor defaultIcon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
                 for(Poi curPoi:poiList){
-                    MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription());
-                    if(!curPoi.getName().equals("Connector"))mMap.addMarker(opt); //DON'T ADD TO MAP IF IT IS A CONNECTOR
+                    MarkerOptions opt = new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).title(curPoi.getName()).snippet(curPoi.getDescription()).icon(defaultIcon);
+                    if(!curPoi.getName().equals("Connector")) {
+                        mMap.addMarker(opt); //DON'T ADD TO MAP IF IT IS A CONNECTOR
+                    }
+                    mAllPlacesList.add(curPoi.getName());
                 }
+                mSearchAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -130,17 +274,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-        GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
+        //GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
+    }
 
-        mappingInterface.postNearby(new MappingPostBody("username","pass","poi_2ea3e34f-9912-41df-8484-973004aa598f","poi_d8730ee4-3cbc-4e21-b654-d7b14e880e62")).enqueue(new Callback<POIMapping>() {
+
+
+    private void plotRoute(String startId,String endId){
+        mMap.clear();
+        GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
+        mappingInterface.postNearby(new MappingPostBody("username","pass",startId,endId)).enqueue(new Callback<POIMapping>() {
             @Override
             public void onResponse(Call<POIMapping> call, Response<POIMapping> response) {
+
                 Log.d("Response",response.message()+response.code()+response.toString());
                 List<PoiMap> routes = response.body().getPois();
                 ArrayList<LatLng> coordinates = new ArrayList<>();
 
-                for(PoiMap curPOI:routes)
-                    coordinates.add(new LatLng(Double.parseDouble(curPOI.getLat()),Double.parseDouble(curPOI.getLon())));
+                for(PoiMap curPOI:routes) {
+                    coordinates.add(new LatLng(Double.parseDouble(curPOI.getLat()), Double.parseDouble(curPOI.getLon())));
+
+                }
                 //Iterable<LatLng> latLngIterable = coordinates.iterator();
                 mMap.addPolyline(new PolylineOptions().addAll(coordinates));
             }
@@ -150,9 +303,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d("POST FAILED",t.getMessage()+t.getCause());
             }
         });
+    }
 
+    private LatLng nearestConnector(Poi poi){
 
+        GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
+        mappingInterface.postNearby(new MappingPostBody("username","pass",poi.getPuid(),"poi_2ea3e34f-9912-41df-8484-973004aa598f")).enqueue(new Callback<POIMapping>() {
+            @Override
+            public void onResponse(Call<POIMapping> call, Response<POIMapping> response) {
 
+                Log.d("Response",response.message()+response.code()+response.toString());
+                List<PoiMap> routes = response.body().getPois();
+                ArrayList<LatLng> coordinates = new ArrayList<>();
+
+                for(PoiMap curPOI:routes) {
+                    coordinates.add(new LatLng(Double.parseDouble(curPOI.getLat()), Double.parseDouble(curPOI.getLon())));
+
+                }
+                latLng = coordinates.get(1);
+                //Iterable<LatLng> latLngIterable = coordinates.iterator();
+                //mMap.addPolyline(new PolylineOptions().addAll(coordinates));
+            }
+
+            @Override
+            public void onFailure(Call<POIMapping> call, Throwable t) {
+                Log.d("POST FAILED",t.getMessage()+t.getCause());
+
+            }
+        });
+
+        return latLng;
     }
 
     @Override
@@ -171,7 +351,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onStart() {
         super.onStart();
-        subscribe();
+
     }
 
     @Override
@@ -179,28 +359,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Nearby.getMessagesClient(this).unsubscribe(mMessageListener);
         super.onStop();
     }
-    // Subscribe to receive messages.
-    private void subscribe() {
-        Log.i(TAG, "Subscribing.");
-        SubscribeOptions options = new SubscribeOptions.Builder()
-                .setStrategy(Strategy.BLE_ONLY)
-                .build();
-        Nearby.getMessagesClient(this).subscribe(mMessageListener, options);
-        backgroundSubscribe();
-    }
 
-
-    private void backgroundSubscribe() {
-        Log.i(TAG, "Subscribing for background updates.");
-        SubscribeOptions options = new SubscribeOptions.Builder()
-                .setStrategy(Strategy.BLE_ONLY)
-                .build();
-        Nearby.getMessagesClient(this).subscribe(getPendingIntent(), options);
-    }
-
-    private PendingIntent getPendingIntent() {
-        return PendingIntent.getBroadcast(this, 0, new Intent(this, BeaconService.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(havePermissions()){
+            //buildGoogleApiClient();
+        }
     }
 
     @Override
@@ -211,9 +376,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
-                            .setPermissions(NearbyPermissions.BLE)
-                            .build());
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
+                                .setPermissions(NearbyPermissions.BLE)
+                                .build());
+                        foregroundSubscribe();
+                        backgroundSubscribe();
+                    }
+
                 } else {
                     Toast.makeText(MapsActivity.this,"Need this permission",Toast.LENGTH_SHORT).show();
                 }
@@ -224,6 +395,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // permissions this app might request.
         }
     }
+
+
+    private void backgroundSubscribe() {
+        Log.i(TAG, "Subscribing for background updates.");
+        SubscribeOptions options = new SubscribeOptions.Builder()
+                .setStrategy(Strategy.BLE_ONLY)
+                .build();
+        mMessagesClient.subscribe(getPendingIntent(), options);
+    }
+
+    private PendingIntent getPendingIntent() {
+        return PendingIntent.getBroadcast(this, 0, new Intent(this, BackgroundSubscribeIntentService.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     @Override
     public void onIndoorBuildingFocused() {
 
@@ -233,4 +418,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onIndoorLevelActivated(IndoorBuilding indoorBuilding) {
 
     }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
+    }
+
+
 }
+
+

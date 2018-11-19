@@ -103,5 +103,6 @@ public class LoginOrRegisterActivity extends AppCompatActivity implements View.O
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra("UserProfile", userProfile);
         startActivity(intent);
+        finish();
     }
 }
