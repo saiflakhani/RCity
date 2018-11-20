@@ -1,9 +1,11 @@
 package com.quicsolv.rcity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -104,10 +106,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerInterface.postRegister(registerBody).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
+                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", Context.MODE_WORLD_WRITEABLE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt("USER_ID", response.body().getId());
-                    editor.commit();
+
+                    editor.apply();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

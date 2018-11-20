@@ -2,7 +2,9 @@ package com.quicsolv.rcity;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -136,6 +138,10 @@ public class LoginOrRegisterActivity extends AppCompatActivity implements View.O
 
     private void handleSignIn(GoogleSignInAccount googleSignInAccount) {
         userProfile.setUserId(googleSignInAccount.getId());
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("USER_ID", googleSignInAccount.getId());
+        editor.apply();
         userProfile.setFirstName(googleSignInAccount.getGivenName());
         userProfile.setLastName(googleSignInAccount.getFamilyName());
         userProfile.setEmailId(googleSignInAccount.getEmail());

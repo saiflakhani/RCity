@@ -25,6 +25,7 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
@@ -35,6 +36,7 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 
@@ -56,6 +58,12 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * While subscribed in the background, this service shows a persistent notification with the
@@ -63,21 +71,58 @@ import static android.content.ContentValues.TAG;
  * found or lost, and this service updates the notification, then stops itself.
  */
 public class BackgroundSubscribeIntentService extends BroadcastReceiver {
+    private Socket mSocket;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+
+        try {
+            mSocket = IO.socket("http://192.168.100.8:3000");
+        } catch (URISyntaxException e) {
+        }
+
+
         Nearby.getMessagesClient(context).handleIntent(intent, new MessageListener() {
             @Override
             public void onFound(Message message) {
                 Log.i(TAG, "Found message via PendingIntent: " + message);
-                showNotification(context,"BEACON FOUND",new String(message.getContent()));
+                showNotification(context, "BEACON FOUND", new String(message.getContent()));
+                mSocket.connect();
+                String pUID="";
+                JSONObject beaconObject = new JSONObject();
+                if(!MapsActivity.poiList.isEmpty()){
+                    for(Poi curPoi:MapsActivity.poiList){
+                        if(curPoi.getName().equalsIgnoreCase(new String(message.getContent()))){
+                            pUID = curPoi.getPuid();
+                            break;
+                        }
+                    }
+                }
+                SharedPreferences prefs = context.getSharedPreferences("RCityPrefs",0);
+                String userId = prefs.getString("USER_ID","null");
+                String time = String.valueOf(System.currentTimeMillis());
+                try {
+                    beaconObject.put("userId",userId);
+                    beaconObject.put("routeDate",time);
+                    if ((pUID.equals(""))) {
+                        beaconObject.put("shopId", new String(message.getContent()));
+                    } else {
+                        beaconObject.put("shopId", pUID);
+                    }
+                    beaconObject.put("shopName", new String(message.getContent()));
+                    beaconObject.put("isDeleted","false");
+                    beaconObject.put("time",time);
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mSocket.emit("routingMessage", beaconObject.toString());
             }
 
             @Override
             public void onLost(Message message) {
                 Log.i(TAG, "Lost message via PendingIntent: " + message);
-                showNotification(context,"BEACON FOUND",new String(message.getContent()));
+                showNotification(context, "BEACON FOUND", new String(message.getContent()));
             }
         });
     }
@@ -101,7 +146,6 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(body);
-
 
 
         notificationManager.notify(notificationId, mBuilder.build());

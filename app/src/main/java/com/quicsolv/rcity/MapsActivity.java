@@ -90,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     MessagesClient mMessagesClient;
     private static String curPoiId = "-1";
     private static Poi curPoi= null;
-    List<Poi> poiList = new ArrayList<>();
+    public static List<Poi> poiList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     UserProfile userProfile;
     private static Poi destPOI = null;
