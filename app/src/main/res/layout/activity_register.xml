@@ -6,96 +6,191 @@
     tools:context=".ForgotPasswordActivity">
 
     <RelativeLayout
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <ImageView
-            android:layout_marginTop="15dp"
+            android:id="@+id/iVLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/iVLogo"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/rcity_logo" />
 
-
-
-        <EditText
+        <LinearLayout
+            android:id="@+id/lLNames"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="John Rohilla"
-            android:id="@+id/eTFullName"
             android:layout_below="@id/iVLogo"
             android:layout_marginTop="60dp"
-            android:background="@drawable/rounded_edittext"
-            android:padding="15dp"
-            android:drawableStart="@drawable/person"
-            android:drawablePadding="10dp"/>
+            android:orientation="horizontal"
+            android:weightSum="2">
 
+            <EditText
+                android:id="@+id/eTFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:drawableStart="@drawable/person"
+                android:drawablePadding="10dp"
+                android:hint="First Name"
+                android:padding="15dp" />
 
-        <EditText
+            <EditText
+                android:id="@+id/eTLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:drawableStart="@drawable/person"
+                android:drawablePadding="10dp"
+                android:hint="Last Name"
+                android:padding="15dp" />
+
+        </LinearLayout>
+
+        <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/rGGender"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:weightSum="3"
+            android:orientation="horizontal"
+            android:layout_below="@id/lLNames">
+
+            <RadioButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:id="@+id/rBMale"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/lightBlue"
+                android:buttonTint="@color/lightBlue"/>
+
+
+            <RadioButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:id="@+id/rBFemale"
+                android:textColor="@color/lightBlue"
+                android:buttonTint="@color/lightBlue"/>
+
+
+
+            <RadioButton
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:id="@+id/rBOther"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/lightBlue"
+                android:buttonTint="@color/lightBlue"/>
+
+
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/eTPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rGGender"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableStart="@drawable/phone"
+            android:drawablePadding="10dp"
             android:hint="7738811799"
             android:inputType="phone"
-            android:id="@+id/eTPhoneNumber"
-            android:layout_below="@id/eTFullName"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/rounded_edittext"
-            android:padding="15dp"
-            android:drawableStart="@drawable/phone"
-            android:drawablePadding="10dp"/>
-
+            android:padding="15dp" />
 
         <EditText
+            android:id="@+id/eTEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="john.rohilla@gmail.com"
-            android:inputType="textEmailAddress"
-            android:id="@+id/eTEmail"
             android:layout_below="@id/eTPhoneNumber"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_edittext"
-            android:padding="15dp"
             android:drawableStart="@drawable/email_icon"
-            android:drawablePadding="10dp"/>
-
+            android:drawablePadding="10dp"
+            android:hint="john.rohilla@gmail.com"
+            android:inputType="textEmailAddress"
+            android:padding="15dp" />
 
         <EditText
+            android:id="@+id/eTPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:id="@+id/eTPassword"
             android:layout_below="@id/eTEmail"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_edittext"
-            android:padding="15dp"
             android:drawableStart="@drawable/password"
-            android:drawablePadding="10dp"/>
+            android:drawablePadding="10dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="15dp" />
 
-        <Button
+        <EditText
+            android:id="@+id/eTConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button"
             android:layout_below="@id/eTPassword"
-            android:textColor="@android:color/white"
-            android:text="Login"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="10dp"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:padding="15dp" />
+
+        <EditText
+            android:id="@+id/eTAge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eTConfirmPassword"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="10dp"
+            android:hint="Age"
+            android:inputType="number"
+            android:padding="15dp" />
+
+        <Button
             android:id="@+id/btnRegister"
-            android:layout_marginTop="20dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eTAge"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button"
+            android:text="Register"
+            android:textColor="@android:color/white" />
 
         <TextView
+            android:id="@+id/tVHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tVHelp"
-            android:text="Help?"
+            android:layout_below="@id/btnRegister"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="16dp"
-            android:textSize="18sp"
-            android:layout_below="@id/btnRegister"
-            android:textColor="@color/btnPurple"/>
+            android:text="Help?"
+            android:textColor="@color/btnPurple"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

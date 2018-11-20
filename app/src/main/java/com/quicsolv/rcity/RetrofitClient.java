@@ -1,8 +1,5 @@
 package com.quicsolv.rcity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -23,14 +20,10 @@ public class RetrofitClient {
 
 
     public static Retrofit getClient(String BASE_URL) {
-
         if (retrofit == null) {
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create();
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create())
                     .client(getUnsafeOkHttpClient())
                     .build();
         }

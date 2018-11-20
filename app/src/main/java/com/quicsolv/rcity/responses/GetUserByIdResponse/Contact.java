@@ -1,4 +1,4 @@
-package com.quicsolv.rcity.ProfileResponse;
+package com.quicsolv.rcity.responses.GetUserByIdResponse;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

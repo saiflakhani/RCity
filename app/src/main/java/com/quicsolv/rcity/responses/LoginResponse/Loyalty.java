@@ -1,4 +1,4 @@
-package com.quicsolv.rcity.ProfileResponse;
+package com.quicsolv.rcity.responses.LoginResponse;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,24 +7,24 @@ public class Loyalty {
 
 @SerializedName("balance")
 @Expose
-private String balance;
+private Integer balance;
 @SerializedName("redeemed")
 @Expose
-private String redeemed;
+private Integer redeemed;
 
-public String getBalance() {
+public Integer getBalance() {
 return balance;
 }
 
-public void setBalance(String balance) {
+public void setBalance(Integer balance) {
 this.balance = balance;
 }
 
-public String getRedeemed() {
+public Integer getRedeemed() {
 return redeemed;
 }
 
-public void setRedeemed(String redeemed) {
+public void setRedeemed(Integer redeemed) {
 this.redeemed = redeemed;
 }
 

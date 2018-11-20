@@ -84,7 +84,7 @@ class UserProfile implements Serializable {
             firstName = "John";
             lastName = "Doe";
             gender = "";
-            age = "";
+            age = "969";
             emailId = "";
             phoneNo = "";
             balancePoints = "";
