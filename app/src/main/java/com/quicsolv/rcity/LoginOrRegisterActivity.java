@@ -1,6 +1,7 @@
 package com.quicsolv.rcity;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +24,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.nearby.messages.MessagesClient;
 import com.google.android.gms.nearby.messages.MessagesOptions;
 import com.google.android.gms.nearby.messages.NearbyPermissions;
+import com.google.android.gms.nearby.messages.Strategy;
+import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.google.android.gms.tasks.Task;
 
 public class LoginOrRegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,8 +41,12 @@ public class LoginOrRegisterActivity extends AppCompatActivity implements View.O
     Button btnLogin, btnRegister;
     TextView tVForgotPassword;
     UserProfile userProfile;
+    private MessageListener mMessageListener;
 
     private static final int REQUEST_PERMISSION = 201;
+    private MessagesClient mMessagesClient;
+    private static final String TAG =
+            LoginOrRegisterActivity.class.getSimpleName();
 
 
 
@@ -50,11 +60,29 @@ public class LoginOrRegisterActivity extends AppCompatActivity implements View.O
         getIds();
         checkAndAskPermissions();
 
+
+    }
+
+    private void backgroundSubscribe() {
+        Log.i(TAG, "Subscribing for background updates.");
+        SubscribeOptions options = new SubscribeOptions.Builder()
+                .setStrategy(Strategy.BLE_ONLY)
+                .build();
+        mMessagesClient.subscribe(getPendingIntent(), options);
+
+    }
+    private PendingIntent getPendingIntent() {
+        return PendingIntent.getBroadcast(this, 0, new Intent(this, BackgroundSubscribeIntentService.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void checkAndAskPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
                 == PackageManager.PERMISSION_GRANTED) {
+            mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
+                    .setPermissions(NearbyPermissions.BLE)
+                    .build());
+            backgroundSubscribe();
         }else{
             ActivityCompat.requestPermissions(LoginOrRegisterActivity.this,
                     new String[]{Manifest.permission.INTERNET},
@@ -69,6 +97,11 @@ public class LoginOrRegisterActivity extends AppCompatActivity implements View.O
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mMessagesClient = Nearby.getMessagesClient(this, new MessagesOptions.Builder()
+                            .setPermissions(NearbyPermissions.BLE)
+                            .build());
+                    backgroundSubscribe();
+
                 } else {
                     Toast.makeText(LoginOrRegisterActivity.this,"Need this permission",Toast.LENGTH_SHORT).show();
                 }

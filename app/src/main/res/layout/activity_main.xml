@@ -51,6 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Direct Offers"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:textStyle="bold"
                         android:lines="2"
                         android:layout_marginTop="7dp"
@@ -77,6 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:lines="2"
                         android:text="Find Routes to Shops"
                         android:textStyle="bold"
@@ -105,6 +107,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:lines="2"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:text="Find Family &amp; Friend Shoppers"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
@@ -145,6 +148,7 @@
                         android:text="Find My Car"
                         android:textStyle="bold"
                         android:lines="2"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:layout_marginTop="7dp"
                         android:textColor="@color/btnPurple"/>
 
@@ -171,6 +175,7 @@
                         android:gravity="center"
                         android:lines="2"
                         android:text="Private Shopping Time"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textColor="@color/btnPurple"/>
@@ -198,6 +203,7 @@
                         android:gravity="center"
                         android:lines="2"
                         android:text="Pre-order Deals"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textColor="@color/btnPurple"/>
@@ -234,6 +240,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Food Offers"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:textStyle="bold"
                         android:lines="2"
                         android:layout_marginTop="7dp"
@@ -260,6 +267,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:lines="2"
                         android:text="My Points Wallet"
                         android:textStyle="bold"
@@ -289,6 +297,7 @@
                         android:gravity="center"
                         android:lines="2"
                         android:text="Evacuation Guide"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textColor="@color/btnPurple"/>
@@ -317,6 +326,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search for anything"
+            android:fontFamily="@font/montserrat_semibold"
             android:textColorHint="@android:color/white"
             android:paddingStart="10dp"
             android:paddingBottom="5dp"
@@ -329,6 +339,7 @@
         <Button
             android:id="@+id/btnSearch"
             android:visibility="gone"
+            android:fontFamily="@font/montserrat_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

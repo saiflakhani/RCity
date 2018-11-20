@@ -62,6 +62,9 @@
                 android:background="@drawable/rounded_edittext"
                 android:layout_centerHorizontal="true"
                 android:hint="e.g Reliance Jewels"
+                android:fontFamily="@font/montserrat_medium"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
                 android:ems="10" />
 
         </RelativeLayout>
@@ -92,6 +95,7 @@
             android:background="@drawable/rounded_edittext"
             android:id="@+id/btnSearch"
             android:textColor="@android:color/holo_purple"
+            android:fontFamily="@font/montserrat_bold"
             android:text="Search"/>
 
 
@@ -103,6 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:fontFamily="@font/monserrat_regular"
         android:text="TextView" />
 
     <TextView
@@ -113,6 +118,7 @@
         android:layout_alignBottom="@+id/iBtnLocateMe"
         android:layout_alignEnd="@+id/iBtnFloorUp"
         android:text="Cancel Navigation"
+        android:fontFamily="@font/montserrat_semibold"
         android:textColor="@android:color/holo_red_dark" />
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.quicsolv.rcity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -46,6 +47,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 
 import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.MessagesClient;
@@ -77,7 +79,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int REQUEST_RESOLVE_ERROR = 100;
     private static final int REQUEST_PERMISSION = 42;
-    private GoogleApiClient mGoogleApiClient;
     private TextView tVDebug;
     private AutoCompleteTextView actvSearch;
     private Button btnSearch;
@@ -169,7 +170,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void handleUserLocation(String msg1){
+    public void handleUserLocation(String msg1){
         if(mAllPlacesList.contains(msg1)){
             //int place = mAllPlacesList.indexOf(new String(msg1.getContent()));
             for(Poi poi : poiList){
@@ -313,6 +314,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mAllPlacesList.add(curPoi.getName());
                 }
                 mSearchAdapter.notifyDataSetChanged();
+                LatLng rCity = new LatLng(19.1001368,72.916189);
+                //mMap.addMarker(new MarkerOptions().position(rCity).title("Marker in RCity"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(rCity));
+                mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
             }
 
             @Override
@@ -476,7 +481,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private View.OnClickListener locateListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(!lastLocation.equals("-1")){
+            if(!lastLocation.equals("-1")||!AppConstants.currentMessage.equals("-1")){
+                lastLocation = AppConstants.currentMessage;
                 handleUserLocation(lastLocation);
             }else{
                 Toast.makeText(MapsActivity.this,"Couldn't locate you",Toast.LENGTH_SHORT).show();

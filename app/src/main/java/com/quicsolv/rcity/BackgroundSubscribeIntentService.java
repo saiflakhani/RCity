@@ -86,6 +86,7 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
             @Override
             public void onFound(Message message) {
                 Log.i(TAG, "Found message via PendingIntent: " + message);
+                AppConstants.currentMessage = new String(message.getContent());
                 showNotification(context, "Located you", new String(message.getContent()));
                 mSocket.connect();
                 String pUID="";
