@@ -106,10 +106,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerInterface.postRegister(registerBody).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                    Log.e("RegisterActivitySuccess", response.body().getId().toString());
                     SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", Context.MODE_WORLD_WRITEABLE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt("USER_ID", response.body().getId());
-
                     editor.apply();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -118,6 +118,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                    Log.e("RegisterActivityFailure", t.getMessage());
                     Toast.makeText(RegisterActivity.this, "Failed to register", Toast.LENGTH_SHORT).show();
                 }
             });

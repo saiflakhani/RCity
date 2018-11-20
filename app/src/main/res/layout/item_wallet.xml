@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp" android:layout_height="wrap_content">
+
+<ImageView
+    android:layout_width="25dp"
+    android:layout_height="25dp"
+    android:layout_alignParentStart="true"
+    android:layout_centerVertical="true"
+    android:id="@+id/iVTransaction"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="15dp"
+    android:src="@drawable/find_my_car"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lLTransDetails"
+        android:layout_toStartOf="@id/tVAmount"
+        android:layout_toEndOf="@id/iVTransaction"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tVStore"
+            android:text="Zara Store"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tVDate"
+            android:textSize="13sp"
+            android:text="February 09, 2018"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- $ 50.00"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:id="@+id/tVAmount"
+        android:textColor="@android:color/holo_red_light"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

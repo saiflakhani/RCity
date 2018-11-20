@@ -123,7 +123,7 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
             @Override
             public void onLost(Message message) {
                 Log.i(TAG, "Lost message via PendingIntent: " + message);
-                //showNotification(context, "BEACON FOUND", new String(message.getContent()));
+                //showNotification(context, "BEACON LOST", new String(message.getContent()));
             }
         });
     }

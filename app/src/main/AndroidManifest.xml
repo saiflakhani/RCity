@@ -66,6 +66,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".DealsActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".WalletActivity"></activity>
     </application>
 
 </manifest>

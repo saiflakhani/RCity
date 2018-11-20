@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#4B0082</color>
     <color name="colorAccent">#FF4081</color>
     <color name="btnPurple">#811F74</color>
+    <color name="transparentPurple">#FF811F74</color>
     <color name="eTGrey">#F2F2F2</color>
     <color name="lightBlue">#66CCFF</color>
     <color name="viewBg">#f1f5f8</color>

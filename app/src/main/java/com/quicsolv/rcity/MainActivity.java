@@ -124,14 +124,19 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch(view.getId()) {
             case R.id.lLFindRoutes:
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent = new Intent(this, MapsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.lLWallet:
+                intent = new Intent(this, WalletActivity.class);
                 startActivity(intent);
                 break;
             case R.id.lLDirectOffers:
-                Intent intent1 = new Intent(this, DealsActivity.class);
-                startActivity(intent1);
+                intent = new Intent(this, DealsActivity.class);
+                startActivity(intent);
                 break;
         }
     }

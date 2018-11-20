@@ -20,13 +20,11 @@ public class RetrofitClient {
 
 
     public static Retrofit getClient(String BASE_URL) {
-        if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(getUnsafeOkHttpClient())
                     .build();
-        }
         return retrofit;
     }
 
