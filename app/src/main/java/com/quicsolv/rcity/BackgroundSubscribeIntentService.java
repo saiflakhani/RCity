@@ -77,7 +77,7 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
 
         try {
-            mSocket = IO.socket("http://192.168.100.8:3000");
+            mSocket = IO.socket("http://49.248.65.54:5051");
         } catch (URISyntaxException e) {
         }
 
@@ -86,7 +86,7 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
             @Override
             public void onFound(Message message) {
                 Log.i(TAG, "Found message via PendingIntent: " + message);
-                showNotification(context, "BEACON FOUND", new String(message.getContent()));
+                showNotification(context, "Located you", new String(message.getContent()));
                 mSocket.connect();
                 String pUID="";
                 JSONObject beaconObject = new JSONObject();
@@ -122,7 +122,7 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
             @Override
             public void onLost(Message message) {
                 Log.i(TAG, "Lost message via PendingIntent: " + message);
-                showNotification(context, "BEACON FOUND", new String(message.getContent()));
+                //showNotification(context, "BEACON FOUND", new String(message.getContent()));
             }
         });
     }

@@ -82,18 +82,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private AutoCompleteTextView actvSearch;
     private Button btnSearch;
     private ImageButton btnLocateMe;
+    private MessagesClient mMessagesClient;
     private ArrayAdapter<String> mSearchAdapter;
     private ArrayList<String> mAllPlacesList = new ArrayList<>();
     private static final String TAG =
             MapsActivity.class.getSimpleName();
 
-    MessagesClient mMessagesClient;
+
     private static String curPoiId = "-1";
     private static Poi curPoi= null;
     public static List<Poi> poiList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     UserProfile userProfile;
     private static Poi destPOI = null;
+
 
     LatLng latLng = null;
 
@@ -134,10 +136,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tVDebug = findViewById(R.id.tVDebugView);
         actvSearch = findViewById(R.id.actSearch);
 
+
         mSearchAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,mAllPlacesList);
         actvSearch.setAdapter(mSearchAdapter);
 
-        //TODO REMOVE THIS
         dealsButton();
 
 
