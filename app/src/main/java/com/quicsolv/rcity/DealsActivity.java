@@ -53,7 +53,7 @@ public class DealsActivity extends AppCompatActivity {
         prepareAlbums();
 
         try {
-            Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
+            Glide.with(this).load(R.drawable.album14).into((ImageView) findViewById(R.id.backdrop));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,34 +108,34 @@ public class DealsActivity extends AppCompatActivity {
                 R.drawable.album10,
                 R.drawable.album11};
 
-        Album a = new Album("True Romance", 13, covers[0]);
+        Album a = new Album("Mens T Shirts", 13, covers[0]);
         albumList.add(a);
 
-        a = new Album("Xscpae", 8, covers[1]);
+        a = new Album("Tops & Tees", 8, covers[1]);
         albumList.add(a);
 
-        a = new Album("Maroon 5", 11, covers[2]);
+        a = new Album("Abof", 11, covers[2]);
         albumList.add(a);
 
-        a = new Album("Born to Die", 12, covers[3]);
+        a = new Album("Lifestyle", 12, covers[3]);
         albumList.add(a);
 
-        a = new Album("Honeymoon", 14, covers[4]);
+        a = new Album("Traditional Wear", 14, covers[4]);
         albumList.add(a);
 
-        a = new Album("I Need a Doctor", 1, covers[5]);
+        a = new Album("Men's Shirts", 1, covers[5]);
         albumList.add(a);
 
-        a = new Album("Loud", 11, covers[6]);
+        a = new Album("Suits", 11, covers[6]);
         albumList.add(a);
 
-        a = new Album("Legend", 14, covers[7]);
+        a = new Album("Shirts & Formals", 14, covers[7]);
         albumList.add(a);
 
-        a = new Album("Hello", 11, covers[8]);
+        a = new Album("New Arrivals", 11, covers[8]);
         albumList.add(a);
 
-        a = new Album("Greatest Hits", 17, covers[9]);
+        a = new Album("Jackets & Hoodies", 17, covers[9]);
         albumList.add(a);
 
         adapter.notifyDataSetChanged();

@@ -209,39 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         public void onClick(View view) {
             String searchShop = actvSearch.getText().toString();
             if(!searchShop.isEmpty()){
-                if(mAllPlacesList.contains(searchShop)){
-                    for(Poi poi : poiList){
-                        if(poi.getName().equalsIgnoreCase(searchShop)){
-                            if(curPoiId.equals("-1")) {
-                                plotRoute("poi_2ea3e34f-9912-41df-8484-973004aa598f", poi.getPuid());
-                                Log.d(TAG, "POI ID " + poi.getPuid());
-                            }
-                            else {
-                                plotRoute(curPoiId, poi.getPuid());
-                                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
-                                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
-                                isNavOn = true;
-                                destPOI = poi;
-                                final TextView tVCancel = findViewById(R.id.tVCancelNav);
-                                tVCancel.setVisibility(View.VISIBLE);
-                                tVCancel.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        isNavOn = false;
-                                        mMap.clear();
-                                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
-                                        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
-                                        tVCancel.setVisibility(View.GONE);
-                                    }
-                                });
-                            }
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()))));
-
-                        }
-                    }
-                }else{
-                    Toast.makeText(MapsActivity.this,"Could not find the requested place",Toast.LENGTH_SHORT).show();
-                }
+                navigateToShop(searchShop);
             }else{
                 Toast.makeText(MapsActivity.this,"Please select a place",Toast.LENGTH_SHORT).show();
             }
@@ -250,7 +218,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    private void navigateToShop(String searchShop){
+        if(mAllPlacesList.contains(searchShop)){
+            for(Poi poi : poiList){
+                if(poi.getName().equalsIgnoreCase(searchShop)){
+                    if(curPoiId.equals("-1")) {
+                        plotRoute("poi_2ea3e34f-9912-41df-8484-973004aa598f", poi.getPuid());
+                        Log.d(TAG, "POI ID " + poi.getPuid());
+                    }
+                    else {
+                        plotRoute(curPoiId, poi.getPuid());
+                        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
+                        isNavOn = true;
+                        destPOI = poi;
+                        final TextView tVCancel = findViewById(R.id.tVCancelNav);
+                        tVCancel.setVisibility(View.VISIBLE);
+                        tVCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                isNavOn = false;
+                                mMap.clear();
+                                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.blue_dot);
+                                mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(curPoi.getCoordinatesLat()),Double.parseDouble(curPoi.getCoordinatesLon()))).icon(icon));
+                                tVCancel.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(poi.getCoordinatesLat()),Double.parseDouble(poi.getCoordinatesLon()))));
 
+                }
+            }
+        }else{
+            Toast.makeText(MapsActivity.this,"Could not find the requested place",Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private void checkAndAskPermissions() {
@@ -318,6 +320,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //mMap.addMarker(new MarkerOptions().position(rCity).title("Marker in RCity"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(rCity));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+                checkIntentSearch();
             }
 
             @Override
@@ -401,6 +404,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.zoomTo(19));
         doRetroFit();
     }
+
+
 
     @Override
     public void onStart() {
@@ -489,6 +494,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     };
+
+
+    private void checkIntentSearch(){
+        String shop = "";
+        if(getIntent().getStringExtra("searchStore")!=null){
+            shop = getIntent().getStringExtra("searchStore");
+            navigateToShop(shop);
+        }
+    }
+
+
 
 
 }

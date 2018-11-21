@@ -44,9 +44,10 @@
     <LinearLayout
         android:id="@+id/lLSearch"
         android:layout_width="match_parent"
-        android:background="@android:color/holo_purple"
+        android:background="@color/btnPurple"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:elevation="25dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -55,17 +56,20 @@
             android:layout_height="wrap_content">
 
             <AutoCompleteTextView
-                android:id="@+id/actSearch"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/rounded_edittext"
-                android:layout_centerHorizontal="true"
                 android:hint="e.g Reliance Jewels"
-                android:fontFamily="@font/montserrat_medium"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:ems="10" />
+                android:id="@+id/actSearch"
+                android:textColor="@android:color/white"
+                android:inputType="textEmailAddress"
+                android:paddingStart="12dp"
+                android:padding="5dp"
+                android:layout_marginBottom="5dp"
+                android:textColorHint="@android:color/white"
+                android:background="@drawable/search_bar_autocomplete"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
 
         </RelativeLayout>
 
@@ -107,8 +111,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:fontFamily="@font/monserrat_regular"
-        android:text="TextView" />
+        android:layout_margin="5dp"
+        android:textSize="16dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="" />
 
     <TextView
         android:id="@+id/tVCancelNav"

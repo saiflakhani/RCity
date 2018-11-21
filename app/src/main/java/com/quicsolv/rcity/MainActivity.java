@@ -12,11 +12,20 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -25,17 +34,28 @@ import com.google.android.gms.nearby.messages.MessagesOptions;
 import com.google.android.gms.nearby.messages.NearbyPermissions;
 import com.google.android.gms.nearby.messages.Strategy;
 import com.google.android.gms.nearby.messages.SubscribeOptions;
+import com.quicsolv.rcity.Interfaces.GetPOIInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class MainActivity extends Activity implements View.OnClickListener, View.OnFocusChangeListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
 
     LinearLayout lLDirectOffers, lLFindRoutes, lLFindFF, lLFindCar, lLPrivateShopping, lLPreorderDeals, lLFoodOffers, lLWallet, lLEvacuationGuide;
-    EditText eTSearch;
+    AutoCompleteTextView eTSearch;
     Button btnSearch;
     private static final int REQUEST_PERMISSION = 420;
+    private List<Poi> poiList = new ArrayList<>();
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    ArrayAdapter<String> mSearchAdapter;
+
 
 
     @Override
@@ -45,6 +65,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         setContentView(R.layout.activity_main);
         getIds();
         checkAndAskPermissions();
+        fetchPlaces();
     }
 
 
@@ -72,10 +93,14 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         lLEvacuationGuide.setOnClickListener(this);
 
         eTSearch = findViewById(R.id.eTSearch);
-        eTSearch.setOnFocusChangeListener(this);
+
 
         btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(this);
+
+        mSearchAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,AppConstants.mAllPlacesList);
+        eTSearch.setAdapter(mSearchAdapter);
+
 
     }
 
@@ -138,15 +163,41 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 intent = new Intent(this, DealsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.btnSearch:
+                intent = new Intent(this,MapsActivity.class);
+                if(!eTSearch.getText().toString().equals("")){
+                    intent.putExtra("searchStore",eTSearch.getText().toString());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this,"Search for something..",Toast.LENGTH_SHORT).show();
+                }
         }
     }
 
 
+    private void fetchPlaces() {
+        GetPOIInterface poiInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIInterface.class);
+        poiInterface.postNearby(new PostBody("username","pass","building_a4adff86-0a9c-44f4-ad0c-f709a4f91451_1542360867089")).enqueue(new Callback<POIResponse>() {
+            @Override
+            public void onResponse(Call<POIResponse> call, Response<POIResponse> response) {
+                AppConstants.mAllPlacesList.clear();
+                Log.d("Response",response.message()+response.code()+response.toString());
+                poiList.clear();
+                poiList = response.body().getPois();
+                for(Poi curPoi:poiList){
+                    AppConstants.mAllPlacesList.add(curPoi.getName());
+                }
+                mSearchAdapter.notifyDataSetChanged();
+            }
 
-    @Override
-    public void onFocusChange(View view, boolean b) {
-        if(view.getId() == R.id.eTSearch && b) {
-            btnSearch.setVisibility(View.VISIBLE);
-        } else btnSearch.setVisibility(View.GONE);
+            @Override
+            public void onFailure(Call<POIResponse> call, Throwable t) {
+                Log.d("POST FAILED",t.getMessage()+t.getCause());
+
+            }
+        });
+
+
+        //GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
     }
 }

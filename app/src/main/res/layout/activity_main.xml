@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/eTGrey"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
         <RelativeLayout
@@ -334,43 +334,68 @@
         </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/lLBottom"
-        android:focusableInTouchMode="true"
+        android:layout_width="match_parent"
         android:background="@color/btnPurple"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:elevation="25dp"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/eTSearch"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search for anything"
-            android:background="@color/transparentPurple"
-            android:textColorHint="@android:color/white"
-            android:paddingStart="10dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="5dp"
-            android:fontFamily="@font/montserrat_semibold"
-            android:elevation="15dp"
-            android:drawableEnd="@drawable/search"
-            android:textColor="@android:color/white"/>
+            android:padding="5dp"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search for anything"
+                android:id="@+id/eTSearch"
+                android:textColor="@android:color/white"
+                android:inputType="textEmailAddress"
+                android:paddingStart="12dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:padding="5dp"
+                android:dropDownVerticalOffset="-350dp"
+                android:layout_marginBottom="5dp"
+                android:textColorHint="@android:color/white"
+                android:background="@drawable/search_bar_autocomplete"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+        </RelativeLayout>
+
+        <!--  <RelativeLayout
+              android:layout_width="match_parent"
+              android:padding="5dp"
+              android:layout_height="wrap_content">
+
+
+              <EditText
+                  android:id="@+id/eTEndLocation"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/white"
+                  android:layout_alignParentTop="true"
+                  android:layout_centerHorizontal="true"
+                  android:ems="10" />
+
+          </RelativeLayout>-->
 
         <Button
-            android:id="@+id/btnSearch"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_edittext"
+            android:id="@+id/btnSearch"
+            android:textColor="@android:color/holo_purple"
             android:fontFamily="@font/montserrat_bold"
-            android:text="Search"
-            android:textColor="@color/btnPurple"
-            android:background="@drawable/rounded_button_white"/>
+            android:text="Search"/>
+
 
     </LinearLayout>
 

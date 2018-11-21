@@ -60,13 +60,20 @@
             android:name=".BackgroundSubscribeIntentService"
             android:exported="false" />
 
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".LoginOrRegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".DealsActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".WalletActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginOrRegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".DealsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".WalletActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
