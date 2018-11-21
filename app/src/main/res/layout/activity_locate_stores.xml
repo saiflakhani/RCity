@@ -17,15 +17,15 @@
 
 
     <ImageButton
+        android:id="@+id/iBtnFloorUp"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="25dp"
-        android:padding="20dp"
-        android:id="@+id/iBtnFloorUp"
-        android:background="@drawable/deal_logo"/>
+        android:layout_marginRight="15dp"
+        android:background="@drawable/show_deals"
+        android:padding="20dp" />
 
 
 
