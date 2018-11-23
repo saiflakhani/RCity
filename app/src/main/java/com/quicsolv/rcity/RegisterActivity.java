@@ -25,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     EditText eTFirstName, eTLastName, eTEmail, eTPhone, eTPassword, eTConfirmPassword, eTAge;
     RadioGroup rGGender;
     Button btnRegister;
-    int gender = 9;
+    String gender = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +39,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i) {
                     case R.id.rBOther:
-                        gender = 0;
+                        gender = "Other";
                         break;
                     case R.id.rBFemale:
-                        gender = 1;
+                        gender = "Female";
                         break;
                     case R.id.rBMale:
-                        gender = 2;
+                        gender = "Male";
                         break;
                 }
             }
@@ -78,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String confirmPassword = eTConfirmPassword.getText().toString();
         String age = eTAge.getText().toString();
 
-        if(!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !phone.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty() && (password.equals(confirmPassword)) && !age.isEmpty() && (gender!=9)) {
+        if(!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !phone.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty() && (password.equals(confirmPassword)) && !age.isEmpty() && (!gender.isEmpty())) {
 
             RegisterBody registerBody = new RegisterBody();
             registerBody.setFirstName(firstName);
@@ -88,30 +88,33 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             contact.setPhoneNo(phone);
             registerBody.setContact(contact);
             registerBody.setPassword(password);
+            registerBody.setAge(age);
 
             switch(rGGender.getCheckedRadioButtonId()) {
-                case R.id.rBOther: gender = 0;
+                case R.id.rBOther: gender = "Other";
                 break;
-                case R.id.rBFemale: gender = 1;
+                case R.id.rBFemale: gender = "Female";
                 break;
-                case R.id.rBMale: gender = 2;
+                case R.id.rBMale: gender = "Male";
                 break;
 
             }
+            registerBody.setGender(gender);
 
             RegisterInterface registerInterface = RetrofitClient.getClient(AppConstants.BASE_URL_SERVER).create(RegisterInterface.class);
-
             registerInterface.postRegister(registerBody).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                    Log.e("RegisterActivitySuccess", response.body().getId().toString());
-                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt("USER_ID", response.body().getId());
-                    editor.apply();
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(response.code() == 201) {
+                        Log.e("RegisterActivitySuccess", response.body().getId().toString());
+                        SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt("USER_ID", response.body().getId());
+                        editor.apply();
+                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else Toast.makeText(RegisterActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
