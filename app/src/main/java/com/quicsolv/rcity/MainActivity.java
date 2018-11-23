@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -45,7 +47,7 @@ import retrofit2.Response;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener, View.OnFocusChangeListener {
 
 
     LinearLayout lLDirectOffers, lLFindRoutes, lLFindFF, lLFindCar, lLPrivateShopping, lLPreorderDeals, lLFoodOffers, lLWallet, lLEvacuationGuide;
@@ -93,10 +95,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
         lLEvacuationGuide.setOnClickListener(this);
 
         eTSearch = findViewById(R.id.eTSearch);
+        eTSearch.setOnFocusChangeListener(this);
 
 
         btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(this);
+        if(eTSearch.getText().toString().isEmpty())
+            btnSearch.setVisibility(View.GONE);
+        eTSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(eTSearch.getText().toString().isEmpty()) {
+                    btnSearch.setVisibility(View.GONE);
+                } else
+                    btnSearch.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         mSearchAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,AppConstants.mAllPlacesList);
         eTSearch.setAdapter(mSearchAdapter);
@@ -199,5 +223,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
         //GetPOIMappingInterface mappingInterface = RetrofitClient.getClient(AppConstants.BASE_URL_TOMTOM).create(GetPOIMappingInterface.class);
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        switch(view.getId()) {
+            case R.id.eTSearch:
+                if(b){
+                    if(!eTSearch.getText().toString().isEmpty())
+                        btnSearch.setVisibility(View.VISIBLE);
+                }
+                else {
+                    if(eTSearch.getText().toString().isEmpty())
+                        btnSearch.setVisibility(View.GONE);
+                }
+        }
     }
 }

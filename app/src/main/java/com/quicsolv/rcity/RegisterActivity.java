@@ -1,6 +1,5 @@
 package com.quicsolv.rcity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -8,15 +7,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.quicsolv.rcity.Interfaces.RegisterInterface;
-import com.quicsolv.rcity.requestbodies.RegisterBody.Contact;
-import com.quicsolv.rcity.requestbodies.RegisterBody.RegisterBody;
+import com.quicsolv.rcity.requestbodies.requestbodies.RegisterBody.Contact;
+import com.quicsolv.rcity.requestbodies.requestbodies.RegisterBody.RegisterBody;
 import com.quicsolv.rcity.responses.RegisterResponse.RegisterResponse;
 
 import retrofit2.Call;
@@ -83,12 +80,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         if(!firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !phone.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty() && (password.equals(confirmPassword)) && !age.isEmpty() && (gender!=9)) {
 
-            RegisterInterface registerInterface = RetrofitClient.getClient(AppConstants.BASE_URL_SERVER).create(RegisterInterface.class);
-
-            final RegisterBody registerBody = new RegisterBody();
+            RegisterBody registerBody = new RegisterBody();
             registerBody.setFirstName(firstName);
             registerBody.setLastName(lastName);
-            final Contact contact = new Contact();
+            Contact contact = new Contact();
             contact.setEmailId(email);
             contact.setPhoneNo(phone);
             registerBody.setContact(contact);
@@ -103,11 +98,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             }
+
+            RegisterInterface registerInterface = RetrofitClient.getClient(AppConstants.BASE_URL_SERVER).create(RegisterInterface.class);
+
             registerInterface.postRegister(registerBody).enqueue(new Callback<RegisterResponse>() {
                 @Override
                 public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                     Log.e("RegisterActivitySuccess", response.body().getId().toString());
-                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", Context.MODE_WORLD_WRITEABLE);
+                    SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putInt("USER_ID", response.body().getId());
                     editor.apply();

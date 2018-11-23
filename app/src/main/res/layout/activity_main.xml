@@ -7,394 +7,383 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_above="@id/lLBottom"
-            android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/lLBottom">
 
-            <ImageView
-                android:orientation="horizontal"
-                android:id="@+id/iVHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="280dp"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/rcity_header" />
+        <ImageView
+            android:id="@+id/iVHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="280dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/rcity_header"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/iVHeader"
+            android:orientation="vertical"
+            android:weightSum="3">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_below="@id/iVHeader"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="5dp"
                 android:weightSum="3">
 
                 <LinearLayout
-                    android:paddingEnd="5dp"
-                    android:paddingStart="5dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
+                    android:id="@+id/lLDirectOffers"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:baselineAligned="false"
-                    android:layout_width="match_parent"
-                    android:weightSum="3"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLDirectOffers"
-                        android:gravity="center"
-                        android:padding="10dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/direct_offers" />
 
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/direct_offers"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Direct Offers"
-                            android:textStyle="bold"
-                            android:lines="2"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLFindRoutes"
-                        android:padding="10dp"
-                        android:gravity="center"
-                        android:layout_width="0dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/routes_to_shop"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:gravity="center"
-                            android:lines="2"
-                            android:text="Find Routes to Shops"
-                            android:textStyle="bold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLFindFF"
-                        android:padding="10dp"
-                        android:gravity="center"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/find_family_and_friends"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:lines="2"
-                            android:text="Find Family &amp; Friend Shoppers"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:textStyle="bold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:lines="2"
+                        android:text="Direct Offers"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:paddingEnd="5dp"
-                    android:paddingStart="5dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:baselineAligned="false"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lLFindRoutes"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:weightSum="3"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLFindCar"
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/routes_to_shop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:gravity="center"
-                        android:padding="10dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/find_my_car"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:layout_height="wrap_content"
-                            android:text="Find My Car"
-                            android:textStyle="bold"
-                            android:lines="2"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLPrivateShopping"
-                        android:padding="10dp"
-                        android:gravity="center"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/private_shopping"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:gravity="center"
-                            android:lines="2"
-                            android:text="Private Shopping Time"
-                            android:textStyle="bold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLPreOrderDeals"
-                        android:padding="10dp"
-                        android:gravity="center"
-                        android:background="?attr/selectableItemBackground"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/preorder_deals"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:lines="2"
-                            android:text="Pre-order Deals"
-                            android:textStyle="bold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
+                        android:lines="2"
+                        android:text="Find Routes to Shops"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:paddingEnd="5dp"
-                    android:paddingStart="5dp"
-                    android:baselineAligned="false"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lLFindFF"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:weightSum="3"
-                    android:orientation="horizontal"
-                    android:layout_height="0dp">
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLFoodOffers"
-                        android:background="?attr/selectableItemBackground"
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/find_family_and_friends" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
                         android:gravity="center"
-                        android:padding="10dp"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/food_orders"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Food Offers"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:textStyle="bold"
-                            android:lines="2"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLWallet"
-                        android:padding="10dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/wallet"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:lines="2"
-                            android:text="My Points Wallet"
-                            android:textStyle="bold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:id="@+id/lLEvacuationGuide"
-                        android:padding="10dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/evacuation_guide"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_semibold"
-                            android:gravity="center"
-                            android:lines="2"
-                            android:text="Evacuation Guide"
-                            android:textStyle="bold"
-                            android:layout_marginTop="7dp"
-                            android:textColor="@color/btnPurple"/>
-
-                    </LinearLayout>
-
+                        android:lines="2"
+                        android:text="Find Family &amp; Friend Shoppers"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
+
+
             </LinearLayout>
 
-        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="5dp"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/lLFindCar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/find_my_car" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:lines="2"
+                        android:text="Find My Car"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lLPrivateShopping"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/private_shopping" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Private Shopping Time"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lLPreOrderDeals"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/preorder_deals" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Pre-order Deals"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp"
+                android:paddingBottom="5dp"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/lLFoodOffers"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/food_orders" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:lines="2"
+                        android:text="Food Offers"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lLWallet"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/wallet" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="My Points Wallet"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lLEvacuationGuide"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/evacuation_guide" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserrat_semibold"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="Evacuation Guide"
+                        android:textColor="@color/btnPurple"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/lLBottom"
         android:layout_width="match_parent"
-        android:background="@color/btnPurple"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/btnPurple"
         android:elevation="25dp"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/rLBottom"
             android:layout_width="match_parent"
-            android:padding="5dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
 
             <AutoCompleteTextView
+                android:id="@+id/eTSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search for anything"
-                android:id="@+id/eTSearch"
-                android:textColor="@android:color/white"
-                android:inputType="textEmailAddress"
-                android:paddingStart="12dp"
-                android:fontFamily="@font/montserrat_semibold"
-                android:padding="5dp"
-                android:dropDownVerticalOffset="-350dp"
-                android:layout_marginBottom="5dp"
-                android:textColorHint="@android:color/white"
-                android:background="@drawable/search_bar_autocomplete"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="15dp"
-                />
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/search_bar_autocomplete"
+                android:dropDownAnchor="@id/rLBottom"
+                android:dropDownVerticalOffset="-350dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:hint="Search for anything"
+                android:inputType="textEmailAddress"
+                android:padding="5dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white" />
 
         </RelativeLayout>
 
-        <!--  <RelativeLayout
-              android:layout_width="match_parent"
-              android:padding="5dp"
-              android:layout_height="wrap_content">
-
-
-              <EditText
-                  android:id="@+id/eTEndLocation"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:background="@android:color/white"
-                  android:layout_alignParentTop="true"
-                  android:layout_centerHorizontal="true"
-                  android:ems="10" />
-
-          </RelativeLayout>-->
 
         <Button
+            android:id="@+id/btnSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_edittext"
-            android:id="@+id/btnSearch"
-            android:textColor="@android:color/holo_purple"
             android:fontFamily="@font/montserrat_bold"
-            android:text="Search"/>
+            android:foreground="?attr/selectableItemBackground"
+            android:text="Search"
+            android:textColor="@android:color/holo_purple"
+            android:visibility="gone" />
 
 
     </LinearLayout>

@@ -1,5 +1,6 @@
 package com.quicsolv.rcity;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ import com.quicsolv.rcity.deals.AlbumsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DealsActivity extends AppCompatActivity {
+public class DealsActivity extends Activity {
 
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
@@ -31,7 +32,7 @@ public class DealsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.album_activity);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -67,6 +68,7 @@ public class DealsActivity extends AppCompatActivity {
         final CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(" ");
+        collapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(android.R.color.white));
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 

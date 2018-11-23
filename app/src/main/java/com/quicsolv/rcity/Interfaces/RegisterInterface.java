@@ -1,6 +1,6 @@
 package com.quicsolv.rcity.Interfaces;
 
-import com.quicsolv.rcity.requestbodies.RegisterBody.RegisterBody;
+import com.quicsolv.rcity.requestbodies.requestbodies.RegisterBody.RegisterBody;
 import com.quicsolv.rcity.responses.RegisterResponse.RegisterResponse;
 
 import retrofit2.Call;

@@ -1,4 +1,4 @@
-package com.quicsolv.rcity.requestbodies.RegisterBody;
+package com.quicsolv.rcity.requestbodies.requestbodies.RegisterBody;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

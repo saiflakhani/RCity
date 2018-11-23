@@ -1,44 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".WalletActivity">
+    android:fitsSystemWindows="true" >
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/detail_backdrop_height"
+        android:layout_height="300dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            android:fontFamily="@font/montserrat_semibold"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:expandedTitleGravity="center_horizontal"
+            app:title="My Wallet">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:scaleType="centerCrop"
+            app:layout_collapseParallaxMultiplier="1.2"
+            app:layout_collapseMode="parallax">
+
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="40dp"
+                android:text="My Wallet"
+                android:fontFamily="@font/montserrat_semibold"
+                android:id="@+id/tVMyWallet"
+                android:textSize="24sp"/>
+
+
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="November, 2018"
+                android:layout_below="@id/tVMyWallet"
+                android:fontFamily="@font/montserrat_semibold"
+                android:id="@+id/tVMonth"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CURRENT BALANCE"
+                android:textColor="@color/btnPurple"
+                android:paddingStart="15dp"
+                android:fontFamily="@font/montserrat_semibold"
+                android:paddingEnd="15dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:layout_marginTop="35dp"
+                android:textSize="14sp"
+                android:id="@+id/tagCurrentBalance"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/tVMonth"
+                android:background="@drawable/rounded_button_white"/>
+
+
+            <TextView
+                android:layout_below="@id/tagCurrentBalance"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$1091.00"
+                android:layout_marginTop="40dp"
+                android:textSize="50sp"
+                android:id="@+id/tVBalance"
+                android:fontFamily="@font/montserrat_semibold"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/tBBalance"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                app:title="\u20B9 1019.00"
+                android:paddingBottom="45dp"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rVMain"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rVMain"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    </android.support.v7.widget.RecyclerView>
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

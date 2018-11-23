@@ -100,10 +100,10 @@ public class BackgroundSubscribeIntentService extends BroadcastReceiver {
                     }
                 }
                 SharedPreferences prefs = context.getSharedPreferences("RCityPrefs",0);
-                String userId = prefs.getString("USER_ID","null");
+                int userId = prefs.getInt("USER_ID",0);
                 String time = String.valueOf(System.currentTimeMillis());
                 try {
-                    beaconObject.put("userId",userId);
+                    beaconObject.put("userId",String.valueOf(userId));
                     beaconObject.put("routeDate",time);
                     if ((pUID.equals(""))) {
                         beaconObject.put("shopId", new String(message.getContent()));

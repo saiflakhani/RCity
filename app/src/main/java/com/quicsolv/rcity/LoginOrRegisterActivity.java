@@ -173,7 +173,7 @@ public class LoginOrRegisterActivity extends AppCompatActivity implements View.O
         userProfile.setUserId(googleSignInAccount.getId());
         SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("USER_ID", googleSignInAccount.getId());
+        editor.putInt("USER_ID", 9999); //Shoulc be Integer.parseInt(googleSignInAccount.getId())
         editor.apply();
         userProfile.setFirstName(googleSignInAccount.getGivenName());
         userProfile.setLastName(googleSignInAccount.getFamilyName());

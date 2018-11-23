@@ -1,9 +1,9 @@
-package com.quicsolv.rcity.requestbodies.RegisterBody.LoginBody;
+package com.quicsolv.rcity.requestbodies.requestbodies.ForgotPasswordBody;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginBody {
+public class ForgotPasswordBody {
 
 @SerializedName("emailId")
 @Expose

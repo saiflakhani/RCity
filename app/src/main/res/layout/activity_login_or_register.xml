@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
+            android:foreground="?attr/selectableItemBackground"
             android:textColor="@android:color/white"
             android:background="@drawable/rounded_button"
             android:id="@+id/btnLogin"
@@ -48,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Register"
+            android:foreground="?attr/selectableItemBackground"
             android:textColor="@color/lightBlue"
             android:background="@drawable/rounded_register"
             android:id="@+id/btnRegister"
@@ -73,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
             android:id="@+id/gBtnSignIn"
+            android:background="?attr/selectableItemBackground"
             android:layout_below="@id/tVForgotPassword" />
 
     </RelativeLayout>

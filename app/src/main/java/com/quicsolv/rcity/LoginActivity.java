@@ -12,10 +12,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.quicsolv.rcity.Interfaces.LoginInterface;
-import com.quicsolv.rcity.requestbodies.RegisterBody.LoginBody.LoginBody;
+import com.quicsolv.rcity.requestbodies.requestbodies.LoginBody.LoginBody;
 import com.quicsolv.rcity.responses.LoginResponse.LoginResponse;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,23 +55,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginBody.setEmailId(user);
             loginBody.setPassword(password);
             LoginInterface loginInterface = RetrofitClient.getClient(AppConstants.BASE_URL_SERVER).create(LoginInterface.class);
-            loginInterface.postLogin(loginBody).enqueue(new Callback<List<LoginResponse>>() {
+            loginInterface.postLogin(loginBody).enqueue(new Callback<LoginResponse>() {
                 @Override
-                public void onResponse(Call<List<LoginResponse>> call, Response<List<LoginResponse>> response) {
-                    Log.e("RequestSuccess", response.raw().request().url().toString());
-                    if(toRemember) {
-                        SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt("USER_ID", response.body().get(0).getId());
-                        editor.commit();
-                    }
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if(response.code() == 200) {
+                        Log.e("RequestSuccess", response.raw().request().url().toString());
+                        if (toRemember) {
+                            SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putInt("USER_ID", response.body().getId());
+                            editor.apply();
+                        }
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onFailure(Call<List<LoginResponse>> call, Throwable t) {
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
                     Log.e("RequestFailed: URL", t.getMessage());
                 }
             });

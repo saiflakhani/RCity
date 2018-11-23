@@ -178,6 +178,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/rounded_button"
             android:text="Register"
+            android:foreground="?attr/selectableItemBackground"
             android:textColor="@android:color/white" />
 
         <TextView

@@ -2,6 +2,7 @@ package com.quicsolv.rcity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Bundle;
 import android.view.Window;
@@ -25,9 +26,15 @@ public class SplashActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashActivity.this, LoginOrRegisterActivity.class);
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences("RCityPrefs", 0);
+                int USER_ID = prefs.getInt("USER_ID", 0);
+                Intent i;
+                if(USER_ID != 0) {
+                    i = new Intent(SplashActivity.this, MainActivity.class);
+                } else {
+                    i = new Intent(SplashActivity.this, LoginOrRegisterActivity.class);
+                }
                 startActivity(i);
-
                 // close this activity
                 finish();
             }

@@ -9,4 +9,6 @@
     <color name="lightBlue">#66CCFF</color>
     <color name="viewBg">#f1f5f8</color>
     <color name="album_title">#4c4c4c</color>
+    <color name="colorCredit">#2DA07C</color>
+    <color name="colorDebit">#E5031E</color>
 </resources>
